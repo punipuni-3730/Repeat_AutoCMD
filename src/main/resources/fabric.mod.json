@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "id": "repeat_autocmd",
+  "version": "${version}",
+  "name": "Repeat Autocmd Mod",
+  "description": "Repeats commands at specified intervals on the client side.",
+  "authors": [
+    "YourName"
+  ],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/repeat_autocmd/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "prj.salmon.repeat_autocmd.Repeat_autocmd"
+    ]
+  },
+  "mixins": [],
+  "depends": {
+    "fabricloader": ">=0.15.11",
+    "fabric-api": "*",
+    "minecraft": "1.21.1",
+    "java": ">=17"
+  }
+}

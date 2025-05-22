@@ -1,0 +1,69 @@
+plugins {
+    id 'fabric-loom' version '1.6.11' // 最新の安定版に更新（1.6.11 からアップデート）
+    id 'maven-publish'
+}
+
+version = project.mod_version // mod_version は gradle.properties で定義
+group = project.maven_group   // maven_group は gradle.properties で定義
+base {
+    archivesName = project.archives_base_name // archives_base_name は gradle.properties で定義
+}
+
+repositories {
+    mavenCentral()
+    maven { url = "https://maven.fabricmc.net/" }
+    maven { url = "https://libraries.minecraft.net/" }
+}
+
+dependencies {
+    // Minecraft 本体
+    minecraft "com.mojang:minecraft:1.21.1"
+
+    // Yarn マッピング（mappings として指定）
+    mappings "net.fabricmc:yarn:1.21.1+build.3" // 最新のビルド番号を確認
+
+    // Fabric Loader
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+
+    // Fabric API
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    // SLF4J（コードで LoggerFactory を使用）
+    implementation "org.slf4j:slf4j-api:2.0.16" // 最新バージョン
+}
+
+processResources {
+    inputs.property "version", project.version
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.release = 21 // Java 21 を明示的に指定
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_21 // Java 21 に更新
+    targetCompatibility = JavaVersion.VERSION_21 // Java 21 に更新
+    withSourcesJar() // ソース JAR を生成（オプション）
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archivesBaseName}" }
+    }
+}
+
+// オプション: 公開設定
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+    repositories {
+        // 公開先リポジトリを追加（例: ローカル Maven リポジトリ）
+        mavenLocal()
+    }
+}
